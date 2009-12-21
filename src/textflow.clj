@@ -1,4 +1,5 @@
 ;;;;;;;;;;;;;;;;;;
+;; $Rev$
 ;; textflow is a trivial generator of RFC like call flow (a.k.a sequence diagrams)
 ;; 
 ;; Example usage:
@@ -17,6 +18,10 @@
 ;;                   |         zzz       |                   |
 ;;                   |-------------------------------------->|
 ;;
+;; The source are under Eclipse Public License 1.0
+;; Comments are welcome!
+;;
+;;; Tzach  
 
 (ns textflow
   (:use clojure.contrib.seq-utils)
