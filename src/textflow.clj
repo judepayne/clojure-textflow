@@ -57,6 +57,9 @@
   (reverse (cons e (reverse col))))
 
 
+(defn safe-nth [seq num]
+  (if (>= num (count seq)) nil (nth seq num)))
+
 ;;; textflow functions
 
 (def *space-len* 20)
@@ -122,18 +125,36 @@
   ([actors]
     [(write-empty actors)]))
 
-(defn write-flow [actors msgs]
-  (println (write-actors actors))
-  (doseq [msg msgs]
-      (doseq [row  (apply write-msg (cons actors msg))]
-        (println row))))
+(defn extract-actors [msgs]
+  (filter #(not (nil? %))
+    (distinct 
+       (concat 
+        (map second msgs) 
+        (map #(safe-nth % 2) msgs)))))
+
+(defn write-flow 
+  ([actors msgs]
+    (println (write-actors actors))
+     (doseq [msg msgs]
+       (doseq [row  (apply write-msg (cons actors msg))]
+          (println row))))
+   ([msgs] (write-flow (extract-actors msgs) msgs)))
+    
         
 (defmacro flow [& flow]
   (list 'apply 'write-flow (rec-to-strs flow))) 
   
 ;; Example    
-(flow [Alice Bob Tzach] ; the "actors" are Alice Bob and Tzach
+(flow [Alice Bob Tzach Domba] ; the "actors" are Alice Bob and Tzach
   [[mmm Tzach Bob]
     [xxx Bob Alice]
     [] ; space in the flow
     [zzz Alice Tzach]])
+    
+;; actor auto extraction example    
+(flow 
+  [[mmm Tzach Bob]
+    [xxx Bob Alice]
+    []
+    [zzz Alice Tzach]])
+    
